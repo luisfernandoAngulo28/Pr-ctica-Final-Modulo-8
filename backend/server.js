@@ -29,7 +29,7 @@ pool.getConnection((err, conn) => {
 
 // ── Endpoint principal ────────────────────────────────────────────────────────
 app.get('/cv', (req, res) => {
-  const query = `
+  const queryPersona = `
     SELECT
       p.id, p.nombre, p.apellido, p.ciudad, p.foto,
       f.id AS formacion_id, f.titulo, f.institucion, f.anio
@@ -38,35 +38,51 @@ app.get('/cv', (req, res) => {
     WHERE p.id = 1
     ORDER BY f.id ASC
   `;
+  const queryExp = `SELECT id, cargo, empresa, periodo, descripcion FROM experiencia WHERE persona_id = 1 ORDER BY id ASC`;
 
-  pool.query(query, (err, rows) => {
+  pool.query(queryPersona, (err, rows) => {
     if (err) {
-      console.error('❌ Error en query:', err.message);
+      console.error('❌ Error en query persona:', err.message);
       return res.status(500).json({ error: err.message });
     }
     if (rows.length === 0) {
       return res.status(404).json({ error: 'No se encontraron datos' });
     }
 
-    const persona = {
-      id      : rows[0].id,
-      nombre  : rows[0].nombre,
-      apellido: rows[0].apellido,
-      ciudad  : rows[0].ciudad,
-      foto    : rows[0].foto,
-      formacion: rows
-        .filter(r => r.titulo)
-        .map(r => ({
-          id         : r.formacion_id,
-          titulo     : r.titulo,
-          institucion: r.institucion,
-          anio       : r.anio,
-        })),
-    };
+    pool.query(queryExp, (err2, expRows) => {
+      if (err2) {
+        console.error('❌ Error en query experiencia:', err2.message);
+        return res.status(500).json({ error: err2.message });
+      }
 
-    res.json(persona);
+      const persona = {
+        id        : rows[0].id,
+        nombre    : rows[0].nombre,
+        apellido  : rows[0].apellido,
+        ciudad    : rows[0].ciudad,
+        foto      : rows[0].foto,
+        formacion : rows
+          .filter(r => r.titulo)
+          .map(r => ({
+            id         : r.formacion_id,
+            titulo     : r.titulo,
+            institucion: r.institucion,
+            anio       : r.anio,
+          })),
+        experiencia: expRows.map(e => ({
+          id         : e.id,
+          cargo      : e.cargo,
+          empresa    : e.empresa,
+          periodo    : e.periodo,
+          descripcion: e.descripcion,
+        })),
+      };
+
+      res.json(persona);
+    });
   });
 });
+
 
 // ── Health check ──────────────────────────────────────────────────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
