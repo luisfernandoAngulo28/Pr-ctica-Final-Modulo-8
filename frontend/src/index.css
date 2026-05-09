@@ -518,3 +518,73 @@ html, body, #root {
 }
 .proj-link:hover { color: #fff; }
 @media (max-width: 600px) { .proj-grid { grid-template-columns: 1fr; } }
+
+/* ── Scroll reveal ───────────────────────────────────────────────────────── */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Stats sidebar ───────────────────────────────────────────────────────── */
+.stats-row {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  background: rgba(79,70,229,0.08);
+  border: 1px solid rgba(79,70,229,0.2);
+  border-radius: 12px;
+  padding: 0.75rem 0.5rem;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+.stat-number {
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #a5b4fc, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.stat-label {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Formación: subtítulos ───────────────────────────────────────────────── */
+.form-subtitle {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.form-subtitle .fa-solid { color: var(--accent); }
+
+/* ── Print mejorado ──────────────────────────────────────────────────────── */
+@media print {
+  * { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  @page { margin: 1.2cm; size: A4; }
+  .btn-pdf, .footer { display: none !important; }
+  .avatar-wrap, .disponible-dot { animation: none !important; }
+  .scroll-reveal { opacity: 1 !important; transform: none !important; }
+  .page { display: grid; grid-template-columns: 240px 1fr; }
+  .sidebar { position: static; height: auto; overflow: visible; }
+  .card { break-inside: avoid; page-break-inside: avoid; margin-bottom: 0.5rem; }
+  .proj-grid { grid-template-columns: repeat(2,1fr); }
+  .sidebar-name { -webkit-text-fill-color: #fff !important; }
+}
+

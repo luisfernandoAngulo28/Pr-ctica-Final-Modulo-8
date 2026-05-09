@@ -162,6 +162,19 @@ export default function App() {
       .catch(err => { setError(err.message); setLoading(false) })
   }, [])
 
+  // ── Scroll reveal (Intersection Observer) ───────────────────────────────
+  useEffect(() => {
+    if (!cv) return
+    const obs = new IntersectionObserver(
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target) }
+      }),
+      { threshold: 0.08 }
+    )
+    document.querySelectorAll('.scroll-reveal').forEach(el => obs.observe(el))
+    return () => obs.disconnect()
+  }, [cv])
+
   if (loading) return (
     <div className="screen-center">
       <div className="spinner" />
@@ -196,6 +209,22 @@ export default function App() {
         <div className="disponible-badge">
           <span className="disponible-dot" />
           Disponible para trabajar
+        </div>
+
+        {/* Stats */}
+        <div className="stats-row">
+          <div className="stat-item">
+            <span className="stat-number">4</span>
+            <span className="stat-label">Proyectos</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-number">2+</span>
+            <span className="stat-label">Años exp.</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-number">30+</span>
+            <span className="stat-label">Skills</span>
+          </div>
         </div>
 
         <div className="sidebar-divider" />
@@ -261,7 +290,7 @@ export default function App() {
       <main className="main">
 
         {/* Perfil */}
-        <section className="card fade-in">
+        <section className="card scroll-reveal">
           <h2 className="section-title">
             <i className="section-icon fa-solid fa-user" /> Perfil Profesional
           </h2>
@@ -276,26 +305,57 @@ export default function App() {
         </section>
 
         {/* Formación Académica */}
-        <section className="card fade-in" style={{ animationDelay: '0.1s' }}>
+        <section className="card scroll-reveal">
           <h2 className="section-title">
             <i className="section-icon fa-solid fa-graduation-cap" /> Formación Académica
           </h2>
-          <ul className="timeline-list">
-            {cv.formacion.map((f, i) => (
-              <li key={f.id ?? i} className="timeline-item">
-                <div className="timeline-dot" />
-                <div className="timeline-content">
-                  <p className="timeline-title">{f.titulo}</p>
-                  <p className="timeline-meta">{f.institucion} · {f.anio}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+
+          {/* Títulos universitarios */}
+          {(() => {
+            const titulos = cv.formacion.filter(f => !f.titulo.toLowerCase().startsWith('diplomado'))
+            const diplomas = cv.formacion.filter(f => f.titulo.toLowerCase().startsWith('diplomado'))
+            return (
+              <>
+                {titulos.length > 0 && (
+                  <>
+                    <p className="form-subtitle"><i className="fa-solid fa-school" /> Títulos Universitarios</p>
+                    <ul className="timeline-list" style={{ marginBottom: '1rem' }}>
+                      {titulos.map((f, i) => (
+                        <li key={f.id ?? i} className="timeline-item">
+                          <div className="timeline-dot" />
+                          <div className="timeline-content">
+                            <p className="timeline-title">{f.titulo}</p>
+                            <p className="timeline-meta">{f.institucion} · {f.anio}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+                {diplomas.length > 0 && (
+                  <>
+                    <p className="form-subtitle"><i className="fa-solid fa-certificate" /> Diplomados</p>
+                    <ul className="timeline-list">
+                      {diplomas.map((f, i) => (
+                        <li key={f.id ?? i} className="timeline-item">
+                          <div className="timeline-dot" style={{ background: 'linear-gradient(135deg,#0891b2,#22d3ee)' }} />
+                          <div className="timeline-content">
+                            <p className="timeline-title">{f.titulo}</p>
+                            <p className="timeline-meta">{f.institucion} · {f.anio}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </>
+            )
+          })()}
         </section>
 
         {/* Experiencia Profesional */}
         {cv.experiencia && cv.experiencia.length > 0 && (
-          <section className="card fade-in" style={{ animationDelay: '0.2s' }}>
+          <section className="card scroll-reveal">
             <h2 className="section-title">
               <i className="section-icon fa-solid fa-briefcase" /> Experiencia Profesional
             </h2>
