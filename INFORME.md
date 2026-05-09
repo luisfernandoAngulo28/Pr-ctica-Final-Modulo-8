@@ -162,7 +162,9 @@ docker compose down -v
  => naming to docker.io/fernandoangulo23/angulo-backend:v1
 ```
 
-> 📸 *(Insertar captura de pantalla del docker build aquí)*
+![Construcción de imágenes Docker - docker build frontend y backend](./capturas/01_docker_build.png)
+
+> *(Captura del proceso de construcción de imágenes con node:20-alpine y nginx:1.27-alpine)*
 
 ---
 
@@ -184,13 +186,13 @@ The push refers to repository [docker.io/fernandoangulo23/angulo-backend]
 v1: digest: sha256:333e54c0c8a7ae21fc0abc977fa3a4acb5783014... size: 856
 ```
 
-> 📸 *(Insertar captura de pantalla del docker push aquí)*
+![Publicación de imágenes en Docker Hub - docker push](./capturas/02_docker_push.png)
 
 ---
 
 ### 6.3 Imágenes publicadas en Docker Hub
 
-> 📸 *(Insertar captura de Docker Hub mostrando las 2 imágenes aquí)*
+![Docker Desktop - Contenedores cv_database, cv_backend y cv_frontend en ejecución](./capturas/06_docker_desktop.png)
 
 ---
 
@@ -205,7 +207,7 @@ v1: digest: sha256:333e54c0c8a7ae21fc0abc977fa3a4acb5783014... size: 856
  ✔ Container cv_frontend             Started
 ```
 
-> 📸 *(Insertar captura de pantalla del docker compose up aquí)*
+![Ejecución de Docker Compose - docker compose up -d con los 5 servicios iniciados](./capturas/03_docker_compose_up.png)
 
 ---
 
@@ -231,7 +233,7 @@ Version: '8.0.46'  port: 3306  MySQL Community Server - GPL.
 ✅ El script `init.sql` fue ejecutado automáticamente desde `/docker-entrypoint-initdb.d/`.  
 ✅ Las tablas `persona` y `formacion` fueron creadas e insertadas sin intervención manual.
 
-> 📸 *(Insertar captura de pantalla del terminal con estos logs)*
+![Logs de MySQL - Creación automática de base de datos y ejecución de init.sql](./capturas/04_docker_logs_db.png)
 
 ---
 
@@ -256,11 +258,11 @@ Version: '8.0.46'  port: 3306  MySQL Community Server - GPL.
 }
 ```
 
-> 📸 *(Insertar captura del JSON en el navegador aquí)*
+![Endpoint GET /cv retornando JSON con datos de persona y formación desde MySQL](./capturas/05_backend_json.png)
 
 **Frontend** — `http://localhost:3000`:
 
-> 📸 *(Insertar captura de la app CV en el navegador aquí)*
+![Aplicación CV personal funcionando en el navegador en http://localhost:3000](./capturas/07_frontend_app.png)
 
 ---
 
