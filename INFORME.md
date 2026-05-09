@@ -213,7 +213,25 @@ v1: digest: sha256:333e54c0c8a7ae21fc0abc977fa3a4acb5783014... size: 856
 
 El script `database/init.sql` se monta automáticamente en `/docker-entrypoint-initdb.d/` y es ejecutado por MySQL al inicializar el contenedor por primera vez. Crea las tablas `persona` y `formacion` e inserta los registros del CV sin intervención manual.
 
-> 📸 *(Insertar captura de los logs de MySQL o del contenedor aquí)*
+**Logs del contenedor `cv_database` (`docker logs cv_database`):**
+
+```
+2026-05-09 01:43:27+00:00 [Note] [Entrypoint]: Creating database cvdb
+
+2026-05-09 01:43:27+00:00 [Note] [Entrypoint]: /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/init.sql
+
+2026-05-09 01:43:28+00:00 [Note] [Entrypoint]: Stopping temporary server
+2026-05-09T01:43:35.432575Z 0 [System] [MY-010910] [Server] /usr/sbin/mysqld: Shutdown complete
+2026-05-09T01:44:10.364560Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections.
+Version: '8.0.46'  port: 3306  MySQL Community Server - GPL.
+[Entrypoint]: MySQL init process done. Ready for start up.
+```
+
+✅ La base de datos `cvdb` fue creada automáticamente.  
+✅ El script `init.sql` fue ejecutado automáticamente desde `/docker-entrypoint-initdb.d/`.  
+✅ Las tablas `persona` y `formacion` fueron creadas e insertadas sin intervención manual.
+
+> 📸 *(Insertar captura de pantalla del terminal con estos logs)*
 
 ---
 
