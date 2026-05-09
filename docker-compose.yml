@@ -1,0 +1,58 @@
+services:
+
+  # ── Base de datos ───────────────────────────────────────────────────────────
+  database:
+    image: mysql:8.0
+    container_name: cv_database
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cvdb
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - cv_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ── Backend ─────────────────────────────────────────────────────────────────
+  backend:
+    image: fernandoangulo23/angulo-backend:v1
+    container_name: cv_backend
+    restart: always
+    environment:
+      DB_HOST    : database
+      DB_USER    : root
+      DB_PASSWORD: root
+      DB_NAME    : cvdb
+      PORT       : 4000
+    ports:
+      - "4000:4000"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - cv_network
+
+  # ── Frontend ─────────────────────────────────────────────────────────────────
+  frontend:
+    image: fernandoangulo23/angulo-frontend:v1
+    container_name: cv_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - cv_network
+
+# ── Volúmenes ────────────────────────────────────────────────────────────────
+volumes:
+  mysql_data:
+
+# ── Redes ─────────────────────────────────────────────────────────────────────
+networks:
+  cv_network:
